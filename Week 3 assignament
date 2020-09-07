@@ -1,0 +1,54 @@
+---
+title: "Developing Data Products Week 3 Assignment"
+subtitle: "Use the spacebar or arrow keys to navigate slides"
+author: "Mick Guy"
+date: "10/10/2016"
+output: 
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE }
+library(ggplot2)
+library(plotly)
+library(gapminder)
+```
+
+## Gapminder Bubble Plot (2007)
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+gDat <- gapminder
+jDat <- droplevels(subset(gDat, continent != "Oceania"))
+#colorsURL <- "http://www.stat.ubc.ca/~jenny/notOcto/STAT545A/examples/gapminder/data/gapminderCountryColors.txt"
+# countryColors <- read.delim(file = colorsURL, as.is = 3) # protect color
+countryColors <- read.delim(file="CountryColors", header=TRUE, as.is = 3)
+jColors <- countryColors$color
+names(jColors) <- countryColors$country
+jYear <- 2007
+jDat <- jDat[with(jDat, order(year, -1 * pop)), ]
+gap.bubble.plot <- ggplot(subset(jDat, year == jYear),
+       aes(x = gdpPercap, y = lifeExp )) + scale_x_log10() +
+  geom_point(aes(size = sqrt(pop/pi), text = paste(country, lifeExp, "years")), pch = 21) + 
+  scale_size_continuous(range=c(1,40)) +
+  facet_wrap(~ continent) + 
+  aes(fill = country) + scale_fill_manual(values = jColors) + theme(legend.position="none") +
+  xlab("GDP Per Capita\n") + ylab("\nLife Expectancy")
+ggplotly(gap.bubble.plot, tooltip=c("text"))
+```
+
+See following slide for references
+
+## References
+
+Plot and code inspired by
+http://www.stat.ubc.ca/~jenny/STAT545A/block17_colorsGgplot2Qualitative.html
+http://www.stat.ubc.ca/~jenny/notOcto/STAT545A/examples/gapminder/data/gapminderCountryColors.txt
+https://www.gapminder.org/
+
+License
+https://creativecommons.org/licenses/by-nc/3.0/
