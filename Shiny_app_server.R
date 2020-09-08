@@ -1,43 +1,30 @@
 library(shiny)
-library(datasets)
-library(ggpubr)
+library(ggplot2)
 
-mpgData <- mtcars
-mpgData$am <- factor(mpgData$am, labels = c("Automatic", "Manual"))
-
-shinyServer(function(input, output) {
-  
-  formulaText <- reactive({
-    paste("mpg ~", input$variable)
-  })
-  
-  formulaTextPoint <- reactive({
-    paste("mpg ~", "as.integer(", input$variable, ")")
-  })
-  
-  fit <- reactive({
-    lm(as.formula(formulaTextPoint()), data=mpgData)
-  })
-  
-  output$caption <- renderText({
-    formulaText()
-  })
-  
-  output$mpgBoxPlot <- renderPlot({
-    boxplot(as.formula(formulaText()), 
-            data = mpgData,
-            outline = input$outliers)
-  })
-  
-  output$fit <- renderPrint({
-    summary(fit())
-  })
-  
-  output$mpgPlot <- renderPlot({
-    with(mpgData, {
-      plot(as.formula(formulaTextPoint()))
-      abline(fit(), col=2)
+function(input, output) {
+    
+    dataset <- reactive({
+        diamonds[sample(nrow(diamonds), input$sampleSize),]
     })
-  })
-  
-})
+    
+    output$plot <- renderPlot({
+        
+        p <- ggplot(dataset(), aes_string(x=input$x, y=input$y)) + geom_point()
+        
+        if (input$color != 'None')
+            p <- p + aes_string(color=input$color)
+        
+        facets <- paste(input$facet_row, '~', input$facet_col)
+        if (facets != '. ~ .')
+            p <- p + facet_grid(facets)
+        
+        if (input$jitter)
+            p <- p + geom_jitter()
+        if (input$smooth)
+            p <- p + geom_smooth()
+        
+        print(p)
+        
+    }, height=700)
+    
+}
