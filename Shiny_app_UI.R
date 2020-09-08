@@ -19,8 +19,8 @@ fluidPage(
         checkboxInput('jitter', 'Jitter'),
         checkboxInput('smooth', 'Smooth'),
         
-        selectInput('facet_row', 'Facet Row', c(None='.', names(dataset))),
-        selectInput('facet_col', 'Facet Column', c(None='.', names(dataset)))
+        selectInput('facet_row', 'Facet Row', c(None='.', names(Diam))),
+        selectInput('facet_col', 'Facet Column', c(None='.', names(Diam)))
     ),
     
     mainPanel(
