@@ -3,7 +3,7 @@ library(ggplot2)
 
 Diam <- diamonds
 
-fluidPage(
+ui <- fluidPage(
     
     titlePanel("Diamonds Data set"),
     
