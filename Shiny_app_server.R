@@ -3,13 +3,13 @@ library(ggplot2)
 
 function(input, output) {
     
-    dataset <- reactive({
+    Diam <- reactive({
         diamonds[sample(nrow(diamonds), input$sampleSize),]
     })
     
     output$plot <- renderPlot({
         
-        p <- ggplot(dataset(), aes_string(x=input$x, y=input$y)) + geom_point()
+        p <- ggplot(Diam(), aes_string(x=input$x, y=input$y)) + geom_point()
         
         if (input$color != 'None')
             p <- p + aes_string(color=input$color)
