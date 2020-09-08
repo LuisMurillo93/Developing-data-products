@@ -22,9 +22,12 @@ server <- function(input, output) {
             p <- p + geom_jitter()
         if (input$smooth)
             p <- p + geom_smooth()
+            p <- p + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+            p <- p + theme_bw()
         
         print(p)
         
     }, height=700)
     
 }
+
