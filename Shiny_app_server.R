@@ -1,7 +1,7 @@
 library(shiny)
 library(ggplot2)
 
-function(input, output) {
+server <- function(input, output) {
     
     Diam <- reactive({
         diamonds[sample(nrow(diamonds), input$sampleSize),]
